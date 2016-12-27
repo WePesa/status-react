@@ -124,7 +124,7 @@
                                       :contact-list-modal contact-list)]
                       [component])]])]))))})))
 
-(defn init [& [env]]
+(defn init []
   (status/call-module status/init-jail)
   (dispatch-sync [:reset-app])
   (.registerComponent app-registry "StatusIm" #(r/reactify-component app-root))

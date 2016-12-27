@@ -48,7 +48,7 @@
                (not= from current-identity)
                (or (not exists?) active?))
       (let [group-chat?      (not (nil? group-id))
-            previous-message (messages/get-last-message db chat-id')
+            previous-message (messages/get-last-message chat-id')
             message'         (assoc (->> message
                                          (cu/check-author-direction previous-message)
                                          (check-preview))
@@ -105,7 +105,7 @@
 (register-handler :received-message-when-commands-loaded
   (u/side-effect!
     (fn [db [_ chat-id message]]
-      (if true #_(commands-loaded? db chat-id)
+      (if (commands-loaded? db chat-id)
         (dispatch [:received-message message])
         (s/execute-later
           #(dispatch [:received-message-when-commands-loaded chat-id message])

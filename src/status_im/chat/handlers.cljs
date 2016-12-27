@@ -94,7 +94,7 @@
 (register-handler :start-cancel-command
   (after #(dispatch [:set-soft-input-mode :resize]))
   (u/side-effect!
-    (fn [db _]
+    (fn []
       (dispatch [:animate-cancel-command])
       (dispatch [:cancel-command]))))
 
@@ -322,10 +322,9 @@
                  chats
                  (->> loaded-chats
                       (map (fn [{:keys [chat-id] :as chat}]
-                             (let [last-message (messages/get-last-message db chat-id)]
+                             (let [last-message (messages/get-last-message chat-id)]
                                [chat-id (assoc chat :last-message last-message)])))
-                      (into (priority-map-by compare-chats))))
-        ids    (set (keys chats'))]
+                      (into (priority-map-by compare-chats))))]
 
     (-> db
         (assoc :chats chats')
@@ -565,7 +564,7 @@
   (u/side-effect! send-seen!))
 
 (defn send-clock-value-request!
-  [{:keys [web3 current-public-key]} [_ {:keys [message-id from] :as message}]]
+  [{:keys [web3 current-public-key]} [_ {:keys [message-id from]}]]
   (protocol/send-clock-value-request! {:web3 web3
                                        :message {:from       current-public-key
                                                  :to         from
@@ -587,7 +586,7 @@
            (let [clock-value (+ last-clock-value i 1)]
              (messages/update (assoc message :clock-value clock-value))
              (send-clock-value! db to message-id clock-value))))
-  (fn [db [_ _ i {:keys [message-id] :as message} last-clock-value]]
+  (fn [db [_ _ i {:keys [message-id]} last-clock-value]]
     (assoc-in db [:message-extras message-id :clock-value] (+ last-clock-value i 1))))
 
 (register-handler :send-clock-value!

@@ -26,7 +26,7 @@
       (dispatch [::fetch-commands! identity])))
 
 (defn fetch-commands!
-  [db [{:keys [whisper-identity dapp? dapp-url]}]]
+  [_ [{:keys [whisper-identity dapp? dapp-url]}]]
   (when true
     ;-let [url (get-in db [:chats identity :dapp-url])]
     (cond
@@ -168,7 +168,7 @@
     (fn [{:keys [chats]}]
       (let [contacts (json->clj js-res/default-contacts-js)]
         (doseq [{:keys [id name photo-path public-key add-chat?
-                        dapp? dapp-url dapp-hash] :as contact} contacts]
+                        dapp? dapp-url dapp-hash]} contacts]
           (when-not (chats id)
             (when add-chat?
               (dispatch [:add-chat id {:name name}]))
