@@ -250,7 +250,7 @@
 (register-handler :account-generation-message
   (u/side-effect!
     (fn [_]
-      (when (not (messages/get-by-id sign-up-service/passphraze-message-id))
+      (when-not (messages/get-by-id sign-up-service/passphraze-message-id)
         (sign-up-service/account-generation-message)))))
 
 (register-handler :show-mnemonic
@@ -443,12 +443,12 @@
     (chats/save chat')))
 
 (register-handler :update-chat!
-  (-> (fn [db [_ {:keys [chat-id name] :as chat}]]
-        (let [chat' (if name chat (dissoc chat :name))]
-          (if (get-in db [:chats chat-id])
-            (update-in db [:chats chat-id] merge chat')
-            db)))
-      ((after update-chat!))))
+  (after update-chat!)
+  (fn [db [_ {:keys [chat-id name] :as chat}]]
+    (let [chat' (if name chat (dissoc chat :name))]
+      (if (get-in db [:chats chat-id])
+        (update-in db [:chats chat-id] merge chat')
+        db))))
 
 (register-handler :upsert-chat!
   (fn [db [_ {:keys [chat-id] :as opts}]]

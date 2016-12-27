@@ -92,7 +92,7 @@
                       registered-only)))
        (remove (fn [[n]]
                  (and
-                   (not (= console-chat-id id))
+                   (not= console-chat-id id)
                    (h/matches (name n) "password"))))
        (into {})))
 
