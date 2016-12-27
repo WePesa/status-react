@@ -32,8 +32,7 @@
     [status-im.translations.zh-hans :as zh-hans]
     [status-im.translations.zh-hant :as zh-hant]
     [status-im.translations.zh-wuu :as zh-wuu]
-    [status-im.translations.zh-yue :as zh-yue]
-    [status-im.utils.utils :as u]))
+    [status-im.translations.zh-yue :as zh-yue]))
 
 (def i18n (js/require "react-native-i18n"))
 (set! (.-fallbacks i18n) true)
